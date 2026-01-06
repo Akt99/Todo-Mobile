@@ -1,98 +1,189 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { createHomeStyles } from "@/assets/images/styles/home.styles";
+import EmptyState from "@/components/EmptyState";
+import Header from "@/components/Header";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import TodoInput from "@/components/TodoInput";
+import { api } from "@/convex/_generated/api";
+import { Doc, Id } from "@/convex/_generated/dataModel";
+import useTheme from "@/hooks/use-theme-color";
+import { Ionicons } from "@expo/vector-icons";
+import { useMutation, useQuery } from "convex/react";
+import { LinearGradient } from "expo-linear-gradient";
+import { useState } from "react";
+import {
+  Alert,
+  FlatList,
+  StatusBar,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+/** 🔁 IMPORTANT: switched to todos_v2 */
+type Todo = Doc<"todos_v2">;
 
-export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
+export default function Index() {
+  const { colors } = useTheme();
+  const homeStyles = createHomeStyles(colors);
+
+  const [editingId, setEditingId] = useState<Id<"todos_v2"> | null>(null);
+  const [editText, setEditText] = useState("");
+
+  /** 🔁 switched to todos_v2 APIs */
+  const todos = useQuery(api.todos.getTodos);
+  const toggleTodo = useMutation(api.todos.toggleTodo);
+  const deleteTodo = useMutation(api.todos.deleteTodo);
+  const updateTodo = useMutation(api.todos.updateTodo);
+
+  const isLoading = todos === undefined;
+  if (isLoading) return <LoadingSpinner />;
+
+  const handleToggleTodo = async (id: Id<"todos_v2">) => {
+    await toggleTodo({ id });
+  };
+
+  const handleDeleteTodo = async (id: Id<"todos_v2">) => {
+    Alert.alert("Delete Todo", "Are you sure?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Delete", style: "destructive", onPress: () => deleteTodo({ id }) },
+    ]);
+  };
+
+  const handleEditTodo = (todo: Todo) => {
+    setEditingId(todo._id);
+    setEditText(todo.text);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingId) return;
+    await updateTodo({ id: editingId, text: editText.trim() });
+    setEditingId(null);
+    setEditText("");
+  };
+ const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditText("");
+  };
+  const renderTodoItem = ({ item }: { item: Todo }) => {
+    const isEditing = editingId === item._id;
+
+    return (
+      <View style={homeStyles.todoItemWrapper}>
+        <LinearGradient
+          colors={colors.gradients.surface}
+          style={homeStyles.todoItem}
+        >
+          {/* Checkbox */}
+          <TouchableOpacity
+            style={homeStyles.checkbox}
+            onPress={() => handleToggleTodo(item._id)}
+          >
+            <LinearGradient
+              colors={
+                item.isCompleted
+                  ? colors.gradients.success
+                  : colors.gradients.muted
+              }
+              style={homeStyles.checkboxInner}
+            >
+              {item.isCompleted && (
+                <Ionicons name="checkmark" size={18} color="#fff" />
+              )}
+            </LinearGradient>
+          </TouchableOpacity>
+
+          {/* Text + Actions */}
+          {isEditing ? (
+            <View style={homeStyles.editContainer}>
+            <TextInput
+              style={homeStyles.editInput}
+              value={editText}
+              onChangeText={setEditText}
+              autoFocus
+              multiline
+              placeholder="Edit your task todo..."
+              placeholderTextColor={colors.textMuted}
             />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+            <View style={homeStyles.editButtons}>
+              <TouchableOpacity onPress={handleSaveEdit} activeOpacity={0.8}>
+                <LinearGradient
+                  colors={colors.gradients.success}
+                  style={homeStyles.editButton}
+                >
+                  <Ionicons name="checkmark" size={16} color="#fff" />
+                  <Text style={homeStyles.editButtonText}>Save</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleCancelEdit}
+                activeOpacity={0.8}>
+                  <LinearGradient
+                  colors={colors.gradients.muted}
+                  style={homeStyles.editButton}
+                >
+                  <Ionicons name="close" size={16} color="#fff" />
+                  <Text style={homeStyles.editButtonText}>Cancel</Text>
+                </LinearGradient>
+                </TouchableOpacity>
+            </View>
+            </View>
+          ) : (
+            <>
+              <Text
+                style={[
+                  homeStyles.todoText,
+                  item.isCompleted && { textDecorationLine: "line-through" },
+                ]}
+              >
+                {item.text}
+              </Text>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+              {/* 🔥 THIS is the missing part (icons) */}
+              <View style={[homeStyles.todoActions, { marginLeft: "auto" }]}>
+                <TouchableOpacity onPress={() => handleEditTodo(item)}>
+                  <LinearGradient
+                    colors={colors.gradients.warning}
+                    style={homeStyles.actionButton}
+                  >
+                    <Ionicons name="pencil" size={14} color="#fff" />
+                  </LinearGradient>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => handleDeleteTodo(item._id)}>
+                  <LinearGradient
+                    colors={colors.gradients.danger}
+                    style={homeStyles.actionButton}
+                  >
+                    <Ionicons name="trash" size={14} color="#fff" />
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
+        </LinearGradient>
+      </View>
+    );
+  };
+
+  return (
+    <LinearGradient
+      colors={colors.gradients.background}
+      style={homeStyles.container}
+    >
+      <StatusBar barStyle={colors.statusBarStyle} />
+      <SafeAreaView style={homeStyles.safeArea}>
+        <Header />
+        <TodoInput />
+
+        <FlatList
+          data={todos}
+          renderItem={renderTodoItem}
+          keyExtractor={(item) => item._id}
+          ListEmptyComponent={<EmptyState />}
+        />
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
