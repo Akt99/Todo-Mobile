@@ -1,50 +1,180 @@
-# Welcome to your Expo app 👋
+# 📱 Todo Mobile App (Expo + React Native + Convex)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A modern **cross-platform Todo mobile application** built using **React Native (Expo)** with a **Convex backend**, featuring real-time updates, custom theming (light/dark mode), and a clean, scalable architecture.
 
-## Get started
+This project focuses on **real-world app structure**, not just demos.
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## ✨ Features
 
-2. Start the app
+* ✅ Create, update, delete todos
+* 🔁 Toggle completion status
+* 🧹 Clear all todos
+* 🌗 Light / Dark mode with persistent storage
+* ⚡ Real-time backend with Convex
+* 🎨 Gradient-based modern UI
+* 🧭 Stack + Tabs navigation (Expo Router)
+* 🧠 Clean separation of UI, logic, and backend
+* 📦 Fully typed (TypeScript)
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## 🛠 Tech Stack
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Frontend
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+* **React Native**
+* **Expo**
+* **Expo Router**
+* **TypeScript**
+* **React Navigation**
+* **Expo Linear Gradient**
+* **AsyncStorage**
 
-## Get a fresh project
+### Backend
 
-When you're ready, run:
+* **Convex**
 
-```bash
-npm run reset-project
+  * Real-time database
+  * Queries & mutations
+  * Schema-based tables
+
+---
+
+## 📂 Project Structure
+
+```
+todo-rn/
+├── app/
+│   ├── (tabs)/
+│   │   ├── index.tsx        # Home / Todos
+│   │   ├── settings.tsx     # Settings screen
+│   │   └── _layout.tsx      # Tabs layout
+│   ├── about.tsx
+│   └── _layout.tsx          # Root stack layout
+│
+├── components/
+│   ├── TodoInput.tsx
+│   ├── Header.tsx
+│   ├── EmptyState.tsx
+│   ├── LoadingSpinner.tsx
+│   ├── Preferences.tsx
+│   ├── DangerZone.tsx
+│   └── ProgressStats.tsx
+│
+├── convex/
+│   ├── schema.ts
+│   ├── todos.ts
+│   └── _generated/
+│
+├── hooks/
+│   └── use-theme-color.tsx
+│
+├── assets/
+│   └── images/
+│
+├── package.json
+├── tsconfig.json
+└── README.md
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+## ⚙️ Setup Instructions
 
-To learn more about developing your project with Expo, look at the following resources:
+### 1️⃣ Install dependencies
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npm install
+```
 
-## Join the community
+### 2️⃣ Start Convex backend
 
-Join our community of developers creating universal apps.
+```bash
+npx convex dev
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This will:
+
+* Start the Convex server
+* Generate `.env.local`
+* Create backend types
+
+---
+
+### 3️⃣ Start Expo app
+
+```bash
+npx expo start
+```
+
+Run on:
+
+* 📱 Expo Go (recommended)
+* 🌐 Web
+* 🤖 Android emulator
+* 🍎 iOS simulator (requires Xcode)
+
+---
+
+## 🧩 Convex Schema (Example)
+
+```ts
+export default defineSchema({
+  todos_v2: defineTable({
+    text: v.string(),
+    isCompleted: v.boolean(),
+  }),
+});
+```
+
+---
+
+## 🔁 Real-time Data Flow
+
+* `useQuery()` → subscribes to live data
+* `useMutation()` → updates backend instantly
+* UI updates automatically without refresh
+
+---
+
+## 🌗 Dark / Light Mode
+
+* Custom theme context
+* Stored using `AsyncStorage`
+* Persists across app restarts
+
+---
+
+## 🎯 Learning Outcomes
+
+This project demonstrates:
+
+* Real-world React Native architecture
+* Backend integration (not mocked APIs)
+* Navigation patterns used in production
+* Handling async + real-time data
+* Debugging platform-specific issues
+* Managing developer frustration 😄
+
+---
+
+## 🚀 Future Improvements
+
+* ⏳ Animations with Reanimated
+* 🔔 Notifications
+* ☁️ Auth (Convex Auth)
+* 🧪 Tests
+* 📱 Native modules
+
+---
+
+## 🧠 Author
+
+Built with persistence, frustration, debugging, and eventual clarity.
+Powered by **React Native**, **Convex**, and **AI-assisted problem solving**.
+
+---
+
+
