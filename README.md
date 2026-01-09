@@ -24,14 +24,8 @@ This project focuses on **real-world app structure**, not just demos.
 
 ### Frontend
 
-* **React Native**
-* **Expo**
-* **Expo Router**
-* **TypeScript**
-* **React Navigation**
-* **Expo Linear Gradient**
-* **AsyncStorage**
 
+<p align="center"> <img src="https://skillicons.dev/icons?i=react" height="42" /> <img src="https://skillicons.dev/icons?i=expo" height="42" /> <img src="https://skillicons.dev/icons?i=typescript" height="42" /> <img src="https://skillicons.dev/icons?i=javascript" height="42" /> </p> <p align="center"> <img src="https://img.shields.io/badge/Expo-Go-000000?style=for-the-badge&logo=expo&logoColor=white" /> <img src="https://img.shields.io/badge/React%20Native-Mobile-blue?style=for-the-badge" /> <img src="https://img.shields.io/badge/Cross--Platform-iOS%20%7C%20Android-success?style=for-the-badge" /> </p>
 ### Backend
 
 * **Convex**
