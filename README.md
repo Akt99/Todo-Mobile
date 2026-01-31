@@ -8,15 +8,15 @@ This project focuses on **real-world app structure**, not just demos !
 
 ## ✨ Features
 
-* ✅ Create, update, delete todos
-* 🔁 Toggle completion status
-* 🧹 Clear all todos
-* 🌗 Light / Dark mode with persistent storage
-* ⚡ Real-time backend with Convex
-* 🎨 Gradient-based modern UI
-* 🧭 Stack + Tabs navigation (Expo Router)
-* 🧠 Clean separation of UI, logic, and backend
-* 📦 Fully typed (TypeScript)
+* ✅ Create, update, delete todos.
+* 🔁 Toggle completion status.
+* 🧹 Clear all todos.
+* 🌗 Light / Dark mode with persistent storage.
+* ⚡ Real-time backend with Convex.
+* 🎨 Gradient-based modern UI.
+* 🧭 Stack + Tabs navigation (Expo Router).
+* 🧠 Clean separation of UI, logic, and backend.
+* 📦 Fully typed (TypeScript).
 
 ---
 
