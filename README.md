@@ -2,7 +2,7 @@
 
 A modern **cross-platform Todo mobile application** built using **React Native (Expo)** with a **Convex backend**, featuring real-time updates, custom theming (light/dark mode), and a clean, scalable architecture.
 
-This project focuses on **real-world app structure**, not just demos.
+This project focuses on **real-world app structure**, not just demos !
 
 ---
 
